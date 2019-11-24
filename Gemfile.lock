@@ -51,5 +51,8 @@ DEPENDENCIES
   httparty
   twilio-ruby (~> 5.29.1)
 
+RUBY VERSION
+   ruby 2.6.5p114
+
 BUNDLED WITH
    2.0.2
