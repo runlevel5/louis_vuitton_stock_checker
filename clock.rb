@@ -12,7 +12,7 @@ account_sid = ENV.fetch('TWILIO_ACCOUNT_SID')
 auth_token = ENV.fetch('TWILIO_AUTH_TOKEN')
 $client = Twilio::REST::Client.new account_sid, auth_token
 
-def notify_via_sms(number:, body:)
+def notify_via_sms(body:)
   $client.messages.create(
     from: ENV.fetch('TWILIO_SENDER_PHONE_NUMBER'),
     to: ENV.fetch('TWILIO_RECEIVER_PHONE_NUMBER'),
@@ -27,19 +27,19 @@ module Clockwork
   handler do |_, time|
     COUNTRIES.each do |country_code|
       stock_level = LouisVuitton::StockChecker.check_stock_for(sku_ids: SKU_IDS, country_code: country_code)
+
       SKU_IDS.each do |sku_id|
         stores = stock_level.fetch(country_code)
+        stores.each do |store_lang, sku_details|
+          if in_stock = !!sku_details.dig(sku_id, "inStock")
+            $logger.warn "SKU: #{sku_id}, Country: #{country_code}, Store: #{store_lang}, In Stock: #{in_stock}"
 
-        stores.each do |store|
-          if in_stock = !!stores.dig(sku_id, "inStock")
-            $logger.warn "SKU: #{sku_id}, Country: #{country_code}, Store: #{store}, In Stock: #{in_stock}"
-
-            notify_via_sms(body: "SKU: #{sku_id}, Country: #{country_code}, Store: #{store}, In Stock: #{in_stock}")
+            notify_via_sms(body: "SKU: #{sku_id}, Country: #{country_code}, Store: #{store_lang}, In Stock: #{in_stock}")
           end
         end
       end
     end
   end
 
-  every(5.seconds, "Checking stock. SKUs: #{SKU_IDS}, Stores: #{COUNTRIES}")
+  every(30.seconds, "Checking stock. SKUs: #{SKU_IDS}, Stores: #{COUNTRIES}")
 end
