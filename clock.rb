@@ -2,7 +2,6 @@ require 'rubygems'
 require_relative './lib/louis_vuitton/stock_checker'
 require 'clockwork'
 require 'active_support/time' # Allow numeric durations (eg: 1.minutes)
-require 'mail'
 require 'twilio-ruby'
 
 SKU_IDS=ENV.fetch('SKU_IDS').split(',')
