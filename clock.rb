@@ -11,6 +11,7 @@ $logger = Logger.new(STDERR)
 account_sid = ENV.fetch('TWILIO_ACCOUNT_SID')
 auth_token = ENV.fetch('TWILIO_AUTH_TOKEN')
 $client = Twilio::REST::Client.new account_sid, auth_token
+$has_notified_list = {}
 
 def notify_via_sms(body:)
   $client.messages.create(
@@ -19,27 +20,43 @@ def notify_via_sms(body:)
     body: body)
 end
 
-module Clockwork
-  configure do |config|
-    config[:logger] = $logger
-  end
+def check_stock
+  COUNTRIES.each do |country_code|
+    stock_level = LouisVuitton::StockChecker.check_stock_for(sku_ids: SKU_IDS, country_code: country_code)
 
-  handler do |_, time|
-    COUNTRIES.each do |country_code|
-      stock_level = LouisVuitton::StockChecker.check_stock_for(sku_ids: SKU_IDS, country_code: country_code)
+    SKU_IDS.each do |sku_id|
+      stores = stock_level.fetch(country_code)
+      stores.each do |store_lang, sku_details|
+        if in_stock = !!sku_details.dig(sku_id, "inStock")
+          $logger.warn "SKU: #{sku_id}, Country: #{country_code}, Store: #{store_lang}, In Stock: #{in_stock}"
 
-      SKU_IDS.each do |sku_id|
-        stores = stock_level.fetch(country_code)
-        stores.each do |store_lang, sku_details|
-          if in_stock = !!sku_details.dig(sku_id, "inStock")
-            $logger.warn "SKU: #{sku_id}, Country: #{country_code}, Store: #{store_lang}, In Stock: #{in_stock}"
-
+          if $has_notified_list["#{sku_id}__#{store_lang}"].nil?
+            $logger.warn "Notify user via SMS"
             notify_via_sms(body: "SKU: #{sku_id}, Country: #{country_code}, Store: #{store_lang}, In Stock: #{in_stock}")
+            $has_notified_list["#{sku_id}__#{store_lang}"] = true
           end
         end
       end
     end
   end
 
-  every(5.seconds, "Checking stock. SKUs: #{SKU_IDS}, Stores: #{COUNTRIES}")
+
+end
+
+module Clockwork
+  configure do |config|
+    config[:logger] = $logger
+  end
+
+  handler do |command, time|
+    case command
+    when :check_stock
+      check_stock
+    when :clear_notified_list
+      $has_notified_list = {}
+    end
+  end
+
+  every(5.seconds, :check_stock)
+  every(30.minutes, :clear_notified_list)
 end
