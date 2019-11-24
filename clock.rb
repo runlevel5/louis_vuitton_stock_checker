@@ -41,5 +41,5 @@ module Clockwork
     end
   end
 
-  every(30.seconds, "Checking stock. SKUs: #{SKU_IDS}, Stores: #{COUNTRIES}")
+  every(5.seconds, "Checking stock. SKUs: #{SKU_IDS}, Stores: #{COUNTRIES}")
 end
