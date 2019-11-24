@@ -58,5 +58,5 @@ module Clockwork
   end
 
   every(5.seconds, :check_stock)
-  every(30.minutes, :clear_notified_list)
+  every(60.minutes, :clear_notified_list)
 end
