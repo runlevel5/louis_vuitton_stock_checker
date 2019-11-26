@@ -32,14 +32,18 @@ def check_stock
   end
 
   if in_stock_sku.any? && !$has_notified
+    body = in_stock_sku.map do |sku|
+      "SKU: #{sku[:sku_id]}, Country: #{sku[:country_code]}, Store: #{sku[:store]}, In Stock: true"
+    end.join("\n")
+
     if number = ENV['TWILIO_RECEIVER_PHONE_NUMBER']
       $logger.warn "Notify user via SMS"
-      SmsNotifier.perform(to: number, body: in_stock_sku.to_s)
+      SmsNotifier.perform(to: number, body: body)
     end
 
     if email = ENV['NOTIFY_TO_EMAIl']
       $logger.warn "Notify user via email"
-      EmailNotifier.perform(email: email, subject: "LV Stock Check Report #{Time.now}", body: in_stock_sku.to_s)
+      EmailNotifier.perform(email: email, subject: "LV Stock Check Report #{Time.now}", body: body)
     end
 
     $has_notified = true
