@@ -2,7 +2,7 @@ require 'sendgrid-ruby'
 include SendGrid
 
 class EmailNotifier
-  attr_reader :email, :subject, :content
+  attr_reader :email, :subject, :body
 
   def initialize(email:, subject:, body:)
     @email = email
@@ -13,6 +13,10 @@ class EmailNotifier
   def perform
     mail = Mail.new(from, subject, to, content)
     sendgrid_client.client.mail._('send').post(request_body: mail.to_json)
+  end
+
+  def self.perform(email:, subject:, body:)
+    self.new(email: email, subject: subject, body: body).perform
   end
 
   private
