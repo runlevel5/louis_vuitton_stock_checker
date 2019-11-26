@@ -1,5 +1,6 @@
 require 'rubygems'
 require_relative './lib/louis_vuitton/stock_checker'
+require_relative './lib/email_notifier'
 require 'clockwork'
 require 'active_support/time' # Allow numeric durations (eg: 1.minutes)
 require 'twilio-ruby'
@@ -33,6 +34,12 @@ def check_stock
           if $has_notified_list["#{sku_id}__#{store_lang}"].nil?
             $logger.warn "Notify user via SMS"
             notify_via_sms(body: "SKU: #{sku_id}, Country: #{country_code}, Store: #{store_lang}, In Stock: #{in_stock}")
+
+            if email = ENV['NOTIFY_TO_EMAIl']
+              $logger.warn "Notify user via email"
+              EmailNotifier.new(email: email, subject: "SKU: #{sku_id}, Store: #{store_lang}, In Stock: #{in_stock}", body: "SKU: #{sku_id}, Store: #{store_lang}, In Stock: #{in_stock}")
+            end
+
             $has_notified_list["#{sku_id}__#{store_lang}"] = true
           end
         end

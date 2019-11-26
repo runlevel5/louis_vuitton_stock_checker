@@ -33,6 +33,9 @@ GEM
     multipart-post (2.1.1)
     nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
+    ruby_http_client (3.3.0)
+    sendgrid-ruby (6.0.0)
+      ruby_http_client (~> 3.3.0)
     thread_safe (0.3.6)
     twilio-ruby (5.29.1)
       faraday (~> 0.9)
@@ -49,6 +52,7 @@ DEPENDENCIES
   activesupport
   clockwork!
   httparty
+  sendgrid-ruby
   twilio-ruby (~> 5.29.1)
 
 RUBY VERSION

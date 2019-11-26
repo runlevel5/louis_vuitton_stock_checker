@@ -24,3 +24,5 @@ SKU_IDS | The comma deliminated SKU IDs | string,string |
 COUNTRIES | The comma deliminated country code | string,string |
 STOCK_CHECK_FREQUENCY | The recurring time to check stock in second | integer | 5
 NOTIFICATION_CLEAR_FREQUENCY | The recurring time to notify user in second | integer | 7200
+SENDGRID_API_KEY | SendGrid API Key | string
+NOTIFY_TO_EMAIl | The email to send email notification to | string
