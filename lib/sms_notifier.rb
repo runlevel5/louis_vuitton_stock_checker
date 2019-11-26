@@ -11,7 +11,7 @@ class SmsNotifier
   def perform
     twilio_client.messages.create(
       from: from,
-      to: to
+      to: to,
       body: body)
   end
 
