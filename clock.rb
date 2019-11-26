@@ -1,25 +1,15 @@
 require 'rubygems'
 require_relative './lib/louis_vuitton/stock_checker'
 require_relative './lib/email_notifier'
+require_relative './lib/sms_notifier'
 require 'clockwork'
 require 'active_support/time' # Allow numeric durations (eg: 1.minutes)
-require 'twilio-ruby'
 
 SKU_IDS=ENV.fetch('SKU_IDS').split(',')
 COUNTRIES=ENV.fetch('COUNTRIES').split(',')
 
 $logger = Logger.new(STDERR)
-account_sid = ENV.fetch('TWILIO_ACCOUNT_SID')
-auth_token = ENV.fetch('TWILIO_AUTH_TOKEN')
-$client = Twilio::REST::Client.new account_sid, auth_token
 $has_notified = false
-
-def notify_via_sms(body:)
-  $client.messages.create(
-    from: ENV.fetch('TWILIO_SENDER_PHONE_NUMBER'),
-    to: ENV.fetch('TWILIO_RECEIVER_PHONE_NUMBER'),
-    body: body)
-end
 
 def check_stock
   in_stock_sku = []
@@ -42,12 +32,14 @@ def check_stock
   end
 
   if in_stock_sku.any? && !$has_notified
-    $logger.warn "Notify user via SMS"
-    notify_via_sms(body: in_stock_sku.to_s)
+    if number = ENV['TWILIO_RECEIVER_PHONE_NUMBER']
+      $logger.warn "Notify user via SMS"
+      SmsNotifier.perform(to: number, body: in_stock_sku.to_s)
+    end
 
     if email = ENV['NOTIFY_TO_EMAIl']
       $logger.warn "Notify user via email"
-      EmailNotifier.new(email: email, subject: "LV Stock Check Report #{Time.now}", body: in_stock_sku.to_s)
+      EmailNotifier.perform(email: email, subject: "LV Stock Check Report #{Time.now}", body: in_stock_sku.to_s)
     end
 
     $has_notified = true
