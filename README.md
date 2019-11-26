@@ -16,9 +16,11 @@ To run:
 
 ENV | Use | Format | Default
 --- | --- | --- | ---
-TWILIO_ACCOUNT_SID | Twilio Account SID | 
-TWILIO_AUTH_TOKEN | Twilio Auth Token | 
-TWILIO_SENDER_PHONE_NUMBER | The vertified number of the SMS sender |
-TWILIO_RECEIVER_PHONE_NUMBER | The vertified number of the SMS receiver |
-SKU_IDS | The comma deliminated SKU IDs | sku_id,sku_id |
-COUNTRIES | The comma deliminated country code | code,code |
+TWILIO_ACCOUNT_SID | Twilio Account SID | string
+TWILIO_AUTH_TOKEN | Twilio Auth Token | string
+TWILIO_SENDER_PHONE_NUMBER | The vertified number of the SMS sender | string
+TWILIO_RECEIVER_PHONE_NUMBER | The vertified number of the SMS receiver | string
+SKU_IDS | The comma deliminated SKU IDs | string,string |
+COUNTRIES | The comma deliminated country code | string,string |
+STOCK_CHECK_FREQUENCY | The recurring time to check stock in second | integer | 5
+NOTIFICATION_CLEAR_FREQUENCY | The recurring time to notify user in second | integer | 7200
