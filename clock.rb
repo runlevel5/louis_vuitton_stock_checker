@@ -18,6 +18,8 @@ def check_stock
     stock_level = LouisVuitton::StockChecker.check_stock_for(sku_ids: SKU_IDS, country_code: country_code)
 
     SKU_IDS.each do |sku_id|
+      next if country_code == 'DE' && sku_id == 'N41207'
+
       stores = stock_level.fetch(country_code)
       stores.each do |store_lang, sku_details|
         in_stock = !!sku_details.dig(sku_id, "inStock")
