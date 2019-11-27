@@ -69,7 +69,7 @@ module LouisVuitton
         store_languages: ['por-br']
       },
       'CA' => { # Canada
-        store_languages: ['eng-sg', 'fra-ca']
+        store_languages: ['eng-ca', 'fra-ca']
       },
       'NZ' => { # New Zealand
         store_languages: ['eng-sg'],
