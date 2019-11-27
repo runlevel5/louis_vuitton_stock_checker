@@ -25,7 +25,7 @@ def check_stock
         $logger.warn "SKU: #{sku_id}, Country: #{country_code}, Store: #{store_lang}, In Stock: #{in_stock}"
 
         if in_stock
-          in_stock_sku << { sku: sku_id, country: country_code, store: store_lang }
+          in_stock_sku << { sku_id: sku_id, country_code: country_code, store: store_lang }
         end
       end
     end
