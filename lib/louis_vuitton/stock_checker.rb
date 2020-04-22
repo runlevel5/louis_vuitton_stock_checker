@@ -6,7 +6,7 @@ module LouisVuitton
     # LV API-TPC accepts 2 query:
     # storeLang: which is one of STORES
     # skuIdList: comma deliminated SKU IDS, for example: M58009,M58010
-    API_URL = 'https://api-tpc.louisvuitton.com/ajaxsecure/getStockLevel.jsp'
+    API_URL = 'https://secure.louisvuitton.com/ajaxsecure/getStockLevel.jsp'
     STORES = {
       'DE' => { # Germany
         store_languages: ['deu-de']
