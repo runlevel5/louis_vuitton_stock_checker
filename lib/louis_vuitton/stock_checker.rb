@@ -130,10 +130,19 @@ module LouisVuitton
         query['dispatchCountry'] = dispatch_country
       end
 
-      # $logger.info query.to_s
+      $logger.info query.to_s
 
       url = URI::HTTPS.build(host: 'api-tpc.louisvuitton.com', path: '/ajaxsecure/getStockLevel.jsp', query: URI.encode_www_form(query))
-      response = HTTParty.get(url, format: :json)
+      begin
+        response = HTTParty.get(url, format: :json)
+      rescue HTTParty::Error
+        logger.error "Failed to fetch #{query.to_s}"
+        return nil
+      rescue StandardError => e
+        logger.error e.backtrace
+        raise
+      end
+
       response.parsed_response
     end
   end
