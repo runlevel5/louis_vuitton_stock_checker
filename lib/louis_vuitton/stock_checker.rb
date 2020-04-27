@@ -136,10 +136,10 @@ module LouisVuitton
       begin
         response = HTTParty.get(url, format: :json)
       rescue HTTParty::Error
-        logger.error "Failed to fetch #{query.to_s}"
+        $logger.error "Failed to fetch #{query.to_s}"
         return nil
       rescue StandardError => e
-        logger.error e.backtrace
+        $logger.error e.backtrace
         raise
       end
 
