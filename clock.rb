@@ -19,6 +19,7 @@ def check_stock
     "AU_SKU_IDS", "CN_SKU_IDS", "TW_SKU_IDS", "JP_SKU_IDS", "KR_SKU_IDS",
     "HK_SKU_IDS"
   ).each do |key, sku_ids_string|
+    next if sku_ids_string.nil?
     sku_ids = sku_ids_string.split(",")
     country_code = key.split("_")[0]
 
