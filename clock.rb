@@ -5,21 +5,26 @@ require_relative './lib/sms_notifier'
 require 'clockwork'
 require 'active_support/time' # Allow numeric durations (eg: 1.minutes)
 
-SKU_IDS=ENV.fetch('SKU_IDS').split(',')
-COUNTRIES=ENV.fetch('COUNTRIES').split(',')
-
 $logger = Logger.new(STDERR)
 $has_notified = false
 
 def check_stock
   in_stock_sku = []
 
-  COUNTRIES.each do |country_code|
-    stock_level = LouisVuitton::StockChecker.check_stock_for(sku_ids: SKU_IDS, country_code: country_code)
+  ENV.slice(
+    "DE_SKU_IDS", "DK_SKU_IDS", "LU_SKU_IDS", "BE_SKU_IDS", "IE_SKU_IDS",
+    "MC_SKU_IDS", "NL_SKU_IDS", "AT_SKU_IDS", "FI_SKU_IDS", "SE_SKU_IDS",
+    "FR_SKU_IDS", "IT_SKU_IDS", "GB_SKU_IDS", "RU_SKU_IDS", "US_SKU_IDS",
+    "BR_SKU_IDS", "CA_SKU_IDS", "NZ_SKU_IDS", "MY_SKU_IDS", "SG_SKU_IDS",
+    "AU_SKU_IDS", "CN_SKU_IDS", "TW_SKU_IDS", "JP_SKU_IDS", "KR_SKU_IDS",
+    "HK_SKU_IDS"
+  ).each do |key, sku_ids_string|
+    sku_ids = sku_ids_string.split(",")
+    country_code = key.split("_")[0]
 
-    SKU_IDS.each do |sku_id|
-      next if country_code == 'DE' && sku_id == 'N41207'
+    stock_level = LouisVuitton::StockChecker.check_stock_for(sku_ids: sku_ids, country_code: country_code)
 
+    sku_ids.each do |sku_id|
       stores = stock_level.fetch(country_code)
       stores.each do |store_lang, sku_details|
         in_stock = !!sku_details.dig(sku_id, "inStock")
