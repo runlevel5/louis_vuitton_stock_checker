@@ -72,9 +72,9 @@ module Clockwork
     end
   end
 
-  check_stock_frequency = ENV.fetch('STOCK_CHECK_FREQUENCY', 5).to_i.seconds
-  notification_clear_frequency = ENV.fetch('NOTIFICATION_CLEAR_FREQUENCY', 7200).to_i.seconds
+  check_stock_frequency_in_seconds = ENV.fetch('STOCK_CHECK_FREQUENCY', 5).to_i.seconds
+  notification_clear_frequency_in_seconds = ENV.fetch('NOTIFICATION_CLEAR_FREQUENCY', 7200).to_i.seconds
 
-  every(check_stock_frequency, :check_stock)
-  every(notification_clear_frequency, :clear_notified_list)
+  every(check_stock_frequency_in_seconds, :check_stock)
+  every(notification_clear_frequency_in_seconds, :clear_notified_list)
 end
