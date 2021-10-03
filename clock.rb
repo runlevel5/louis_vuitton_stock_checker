@@ -45,7 +45,7 @@ def check_stock
 
     if number = ENV['TWILIO_RECEIVER_PHONE_NUMBER']
       $logger.warn "Notify user via SMS"
-      url = URI::HTTP.build(host: 'localhost', path: '/notify-via-sms')
+      url = URI::HTTP.build(host: 'localhost', path: '/notify-via-sms', port: ENV['PORT'])
       begin
         @result = HTTParty.post(@url,
           body: { number: number, content: body }.to_json,
@@ -61,7 +61,7 @@ def check_stock
 
     if email = ENV['NOTIFY_TO_EMAIl']
       $logger.warn "Notify user via email"
-      url = URI::HTTP.build(host: 'localhost', path: '/notify-via-email')
+      url = URI::HTTP.build(host: 'localhost', path: '/notify-via-email', port: ENV['PORT'])
       begin
         @result = HTTParty.post(@url,
           body: { email: email, content: body, subject: "LV Stock Check Report #{Time.now}"}.to_json,
