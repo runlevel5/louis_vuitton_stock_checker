@@ -2,15 +2,22 @@
 
 Instead of sitting in front of your browser pressing F5 now and then to see if a particular item is in stock or not. It is now much easier to use this app to periodically check for you. If items are avaialble, it would notify you via SMS.
 
+The app consists of 2 components:
+
+* stock check poller
+* notifier
+
+The `stock check poller` would check for the stock availability of speific SKU(s) then notify users via SMS or Email via the `notifier` app
+
 ## Setup
 
-`bundle install`
+`./bin/setup.sh`
 
 Set environment variables, see Configuration section
 
 To run:
 
-`bundle exec clockwork clock.rb`
+`foreman start`
 
 ## Configuration
 
@@ -50,3 +57,4 @@ STOCK_CHECK_FREQUENCY | The recurring time to check stock in second | integer | 
 NOTIFICATION_CLEAR_FREQUENCY | The recurring time to notify user in second | integer | 7200
 SENDGRID_API_KEY | SendGrid API Key | string
 NOTIFY_TO_EMAIl | The email to send email notification to | string
+PORT | the port that notifer server | integer

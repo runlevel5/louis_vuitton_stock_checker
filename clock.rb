@@ -1,9 +1,8 @@
 require 'rubygems'
 require_relative './lib/louis_vuitton/stock_checker'
-require_relative './lib/email_notifier'
-require_relative './lib/sms_notifier'
 require 'clockwork'
 require 'active_support/time' # Allow numeric durations (eg: 1.minutes)
+require 'httparty'
 
 $logger = Logger.new(STDERR)
 $has_notified = false
@@ -46,12 +45,34 @@ def check_stock
 
     if number = ENV['TWILIO_RECEIVER_PHONE_NUMBER']
       $logger.warn "Notify user via SMS"
-      SmsNotifier.perform(to: number, body: body)
+      url = URI::HTTP.build(host: 'localhost', path: '/notify-via-sms')
+      begin
+        @result = HTTParty.post(@url,
+          body: { number: number, content: body }.to_json,
+          headers: { 'Content-Type' => 'application/json' })
+      rescue HTTParty::Error
+        $logger.error "Failed to notify via SMS"
+        return nil
+      rescue StandardError => e
+        $logger.error e.backtrace
+        raise
+      end
     end
 
     if email = ENV['NOTIFY_TO_EMAIl']
       $logger.warn "Notify user via email"
-      EmailNotifier.perform(email: email, subject: "LV Stock Check Report #{Time.now}", body: body)
+      url = URI::HTTP.build(host: 'localhost', path: '/notify-via-email')
+      begin
+        @result = HTTParty.post(@url,
+          body: { email: email, content: body, subject: "LV Stock Check Report #{Time.now}"}.to_json,
+          headers: { 'Content-Type' => 'application/json' })
+      rescue HTTParty::Error
+        $logger.error "Failed to notify via email"
+        return nil
+      rescue StandardError => e
+        $logger.error e.backtrace
+        raise
+      end
     end
 
     $has_notified = true

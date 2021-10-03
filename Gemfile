@@ -5,4 +5,4 @@ gem 'clockwork', github: 'Rykian/clockwork'
 gem 'activesupport'
 gem 'twilio-ruby', '~> 5.29.1'
 gem 'sendgrid-ruby'
-
+gem 'sinatra'
