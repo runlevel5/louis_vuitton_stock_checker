@@ -32,9 +32,11 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    nokogiri (1.12.5-arm64-darwin)
+    nokogiri (1.13.6-arm64-darwin)
       racc (~> 1.4)
-    racc (1.5.2)
+    nokogiri (1.13.6-x86_64-linux)
+      racc (~> 1.4)
+    racc (1.6.0)
     rack (2.2.3)
     rack-protection (2.1.0)
       rack
@@ -58,6 +60,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   activesupport
