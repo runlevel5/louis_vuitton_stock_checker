@@ -30,24 +30,26 @@ GEM
     minitest (5.14.4)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
-    mustermann (1.1.1)
+    mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
     nokogiri (1.12.5-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.12.5-x86_64-linux)
+      racc (~> 1.4)
     racc (1.5.2)
-    rack (2.2.3)
-    rack-protection (2.1.0)
+    rack (2.2.4)
+    rack-protection (2.2.3)
       rack
     ruby2_keywords (0.0.5)
     ruby_http_client (3.5.2)
     sendgrid-ruby (6.5.1)
       ruby_http_client (~> 3.4)
-    sinatra (2.1.0)
-      mustermann (~> 1.0)
+    sinatra (2.2.3)
+      mustermann (~> 2.0)
       rack (~> 2.2)
-      rack-protection (= 2.1.0)
+      rack-protection (= 2.2.3)
       tilt (~> 2.0)
-    tilt (2.0.10)
+    tilt (2.0.11)
     twilio-ruby (5.29.1)
       faraday (~> 0.9)
       jwt (>= 1.5, <= 2.5)
@@ -58,6 +60,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   activesupport
